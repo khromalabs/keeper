@@ -1,0 +1,9 @@
+---
+date:
+  type: autodate
+text:
+  type: longstring
+title:
+  type: string
+tags:
+  type: tokens

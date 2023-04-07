@@ -1,0 +1,11 @@
+---
+date:
+  type: autodate
+url:
+  type: string
+  validation:
+    rule: regexurl
+description:
+  type: string
+tags:
+  type: tokens
