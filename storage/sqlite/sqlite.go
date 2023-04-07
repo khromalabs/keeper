@@ -1,6 +1,11 @@
-package storage
+package sqlite
 
 import "fmt"
+
+func SqliteHello() string {
+	message := "Hello"
+	return message
+}
 
 // Hello returns a greeting for the named person.
 func Create(name string) string {
