@@ -1,12 +1,12 @@
 package main
 
-
 import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-	"github.com/khromalabs/keeper/storage"
+	// "khromalabs/keeper/storage"
+	// "khromalabs/keeper/storage/sqlite"
 	// "keeperUI"
 )
 
@@ -14,6 +14,7 @@ import (
 type Conf struct {
 	Paths map[string]string
 }
+
 var conf = Conf{
 	Paths: map[string]string{
 		"templates": "templates/",
