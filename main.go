@@ -1,10 +1,15 @@
 package main
 
 import (
+	_ "embed"
+	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+
+	"github.com/xeipuuv/gojsonschema"
+	"gopkg.in/yaml.v3"
+
 	// "khromalabs/keeper/storage"
 	// "khromalabs/keeper/storage/sqlite"
 	// "keeperUI"
@@ -20,6 +25,9 @@ var conf = Conf{
 		"templates": "templates/",
 	},
 }
+
+// go:embed templateSchema.json
+var jsonTemplateSchemaData string
 
 func main() {
 	args := os.Args[1:]
@@ -38,18 +46,34 @@ func main() {
 	// keeperUI.add(template)
 }
 
-func parseTemplate(filename string) (map[string]interface{}, error) {
-	var data map[string]interface{}
+func parseTemplate(templateFilename string) (map[string]interface{}, error) {
+	var yamlTemplateData map[string]interface{}
 
-	yamlFile, err := ioutil.ReadFile(filename)
+	yamlTemplateFile, err := ioutil.ReadFile(templateFilename)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read YAML file: %v", err)
+		return nil, fmt.Errorf("Failed to read template YAML file: %v", err)
 	}
-
-	err = yaml.Unmarshal(yamlFile, &data)
+	err = yaml.Unmarshal(yamlTemplateFile, &yamlTemplateData)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse YAML file: %v", err)
+		return nil, fmt.Errorf("Failed to parse template YAML file: %v", err)
 	}
-
-	return data, nil
+	jsonTemplateData, err := json.Marshal(yamlTemplateData)
+	if err != nil {
+		return nil, fmt.Errorf("Error converting template YAML to JSON: %v", err)
+	}
+	result, err := gojsonschema.Validate(
+		gojsonschema.NewStringLoader(jsonTemplateSchemaData),
+		gojsonschema.NewStringLoader(string(jsonTemplateData)),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Error validating JSON converted YAML template against JSON Schema: %v", err)
+	}
+	if !result.Valid() {
+		errmsg := "YAML template is not valid. See errors:\n"
+		for _, desc := range result.Errors() {
+			errmsg += fmt.Sprintf("- %s\n", desc)
+		}
+		return nil, fmt.Errorf(errmsg)
+	}
+	return yamlTemplateData, nil
 }

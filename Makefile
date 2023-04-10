@@ -5,8 +5,8 @@ MSG_DELETED_EXEC='Borrado ejecutable "$(APP_NAME)"'
 MSG_DONE_NOTHING='No se hace nada'
 MSG_DONE_EXEC="Aplicación \"$(APP_NAME)\" compilada con éxito"
 
-run: build
-# @go run -o $(APP_NAME) . $(ARG)
+run:
+	@go run -o $(APP_NAME) . $(ARG)
 	$(APP_NAME) $(ARG)
 fmt:
 	@go fmt *.go
