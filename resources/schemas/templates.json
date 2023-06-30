@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "Keeper template schema",
+    "type": "object",
+    "additionalProperties": false,
+    "patternProperties": {
+        "^[A-z]+[A-z0-9_]+$": {
+            "type": "object",
+            "additionalProperties": false,
+            "uniqueItems": true,
+            "required": [ "type" ],
+            "properties": {
+                "type": {
+                    "enum": [
+                        "autodate",
+                        "boolean",
+                        "date",
+                        "integer",
+                        "float",
+                        "regexurl",
+                        "string",
+                        "text",
+                        "tokens"
+                    ]
+                },
+                "validation": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "regex": {
+                            "type": "string"
+                        },
+                        "required": {
+                            "type": "boolean"                        
+                        },
+                        "tip": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

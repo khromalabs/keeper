@@ -1,8 +1,9 @@
----
 date:
   type: autodate
 text:
-  type: longstring
+  type: text
+  validation:
+    required: true
 title:
   type: string
 tags:

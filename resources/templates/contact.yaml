@@ -1,0 +1,14 @@
+name:
+  type: string
+  validation:
+    required: true
+surname:
+  type: string
+phone:
+  type: string
+address:
+  type: string
+notes:
+  type: string
+tags:
+  type: tokens

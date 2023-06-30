@@ -1,0 +1,35 @@
+# /etc/bash_completion.d/keeper
+
+_keeper() {
+    local cur # prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+#    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    if [[ $cur == -*  ]]; then
+        local t_opts
+        t_opts="-r -R -u -d -t"
+        COMPREPLY=( $(compgen -W "${t_opts}" -- ${cur}) )
+        return 0
+    fi
+    case "${COMP_CWORD}" in
+	1)
+            local t_opts
+	    t_opts="$(keeper -t)"
+            COMPREPLY=( $(compgen -W "${t_opts}" -- ${cur}) )
+            return 0
+	    ;;
+        *)
+            local t_opts
+            t_opts="$(keeper -t ${COMP_WORDS[1]})"
+            COMPREPLY=( $(compgen -W "${t_opts}" -- ${cur}) )
+	    compopt -o nospace
+            return 0
+            ;;
+    esac
+
+#    COMPREPLY=( $(compgen -W "$(keeper -t)" -- ${cur}) )
+#    return 0
+}
+
+complete -F _keeper keeper

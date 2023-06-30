@@ -1,0 +1,22 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"description": "Keeper configuration schema",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"storage": {
+			"enum": [
+				"sqlite"
+			]
+		},
+		"path": {
+			"additionalProperties": false,
+			"properties": {
+				"templates": { "type": "string" },
+				"db": { "type": "string" }
+			}
+		},
+		"editor": { "type": "string" },
+		"pager": { "type": "string" }
+	}
+}

@@ -1,11 +1,12 @@
----
-date:
-  type: autodate
-url:
+title:
   type: string
   validation:
-    rule: regexurl
+    required: true
 description:
   type: string
 tags:
   type: tokens
+priority:
+  type: integer
+date:
+  type: autodate

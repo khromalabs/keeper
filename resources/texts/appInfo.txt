@@ -1,0 +1,46 @@
+Usage:  keeper <template> [-r|read|-R|--READ|-u|--update|-d|--delete] [filter exp]
+        keeper -t|--template
+        keeper -t|--template <template>
+
+STORAGE COMMAND OPTIONS
+
+Default command (no option parameters) is to create a new registry. 
+
+    -r, --read      Read storage registries
+    -R, --READ      Read storage registries alt (skipping text fields)
+    -u, --update    Update storage registries
+    -d, --delete    Delete storage registries
+
+For every storage option (-r|-R|-u|-d) [filter exp] is applied if available.
+
+INFO COMMAND OPTIONS
+
+    -t|--template               Lists available templates
+    -t|--template <template>    List template fields
+
+Info command options are used for autocompletion whenever package
+bash-completion is available.
+
+FILTER EXP
+
+Filter expresion could contain one or more field descriptions like those:
+
+    field1:searched_word \
+    field2:"quoted words to search in exact order" \
+    field3:%%partial_match%%
+
+Partial matches percent symbols can appear at the beginning and/or the end of
+the searched expresion, following the SQL "LIKE" standard. 
+
+Sample commands:
+
+keeper note                                 Add a new note registry
+keeper task -r id:5                         Read from task storage
+                                            registry with id 5
+keeper note -u tag:project1,title:%%note%%    Update all notes with tag "project1"
+                                            containing "note" in the title
+keeper url -d id:10                         Delete registry from url storage
+                                            with id 10
+
+Please look to the manual for info about configuration options and defining
+custom templates.

@@ -1,0 +1,6 @@
+date:
+  type: autodate
+text:
+  type: text
+  validation:
+    required: true
