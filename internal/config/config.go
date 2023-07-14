@@ -51,47 +51,17 @@ func assertDataPath(dataPath *string) error {
 func load(config *Config) (error) {
 	var err error
 	var dataPath string
-	envEditor, _ := os.LookupEnv("EDITOR")
-	envPager, exists := os.LookupEnv("PAGER")
-	if !exists {
-		envPager = "less"
-	}
-	configFileName, exists := os.LookupEnv("KEEPER_CONFIG_FILE")
-	if !exists {
+	var configYaml map[string]interface{}
+	configFileName, ok := os.LookupEnv("KEEPER_CONFIG_FILE")
+	if !ok {
 		configDir, err := getConfigDir()
 		if err != nil {
 			fmt.Printf("Error getting config directory: %v", err)
 		}
 		configFileName = filepath.Join(configDir, "keeper.yaml")
 	}
-	templatesPath, exists := os.LookupEnv("KEEPER_TEMPLATES_PATH")
-	if !exists {
-		if err = assertDataPath(&dataPath); err != nil {
-			return err
-		}
-		templatesPath = filepath.Join(dataPath, "templates")
-	}
-	dbPath, exists := os.LookupEnv("KEEPER_DB_PATH")
-	if !exists {
-		if err = assertDataPath(&dataPath); err != nil {
-			return err
-		}
-		dbPath = filepath.Join(dataPath, "keeper.db")
-	}
-	*config = Config{
-		Path: map[string]string{
-			"templates": templatesPath + string(os.PathSeparator),
-			"db": dbPath,
-		},
-		Storage: "sqlite",
-		Ui: "cli",
-		Editor: envEditor,
-		Pager: envPager,
-		Miniread: false,
-	}
 	configFile, _ := os.ReadFile(configFileName)
 	if len(configFile) > 0 {
-		var configYaml map[string]interface{}
 		if err = yaml.Unmarshal(configFile, &configYaml); err != nil {
 			return fmt.Errorf("Error parsing config file: %v", err)
 		}
@@ -110,19 +80,65 @@ func load(config *Config) (error) {
 			}
 			return fmt.Errorf(errmsg)
 		}
-		// @TODO File configuration not being applied!
-		// config.Editor = configYaml["editor"].(string)
 	}
-	if storageEnv, exists := os.LookupEnv("KEEPER_STORAGE"); exists {
-		config.Storage = storageEnv
+	LogD.Printf("configYaml: %#v", configYaml)
+	path, okp := configYaml["path"].(map[string]string)
+	templatesPath, ok := os.LookupEnv("KEEPER_TEMPLATES_PATH")
+	if !ok && okp {
+		templatesPath, ok = path["templates"]
+	}
+	if !ok {
+		if err = assertDataPath(&dataPath); err != nil {
+			return err
+		}
+		templatesPath = filepath.Join(dataPath, "templates")
+	}
+	dbPath, ok := os.LookupEnv("KEEPER_DB_PATH")
+	if !ok && okp {
+		dbPath, ok = path["db"]
+	}
+	if !ok {
+		if err = assertDataPath(&dataPath); err != nil {
+			return err
+		}
+		dbPath = filepath.Join(dataPath, "keeper.db")
+	}
+	storage, ok := os.LookupEnv("KEEPER_STORAGE")
+	if !ok {
+		if storage, ok = configYaml["storage"].(string); !ok {
+			storage = "sqlite"
+		}
+	}
+	pager, ok := configYaml["pager"].(string)
+	if !ok {
+		pager = "less"
+	}
+	editor, ok := os.LookupEnv("EDITOR")
+	if !ok {
+		editor, ok = configYaml["editor"].(string)
+		if !ok {
+			return fmt.Errorf("Missing editor configuration or EDITOR env var")
+		}
+	}
+	*config = Config{
+		Path: map[string]string{
+			"templates": templatesPath + string(os.PathSeparator),
+			"db": dbPath,
+		},
+		Storage: storage,
+		Ui: "cli",  // Not in conf by now, only compile time?
+		Editor: editor,
+		Pager: pager,
+		Miniread: false,
 	}
 	if config.Editor == "" {
 		return fmt.Errorf("Editor configuration missing (conf editor value or $EDITOR environment variable required)", err)
 	}
-	enableDebug, exists := os.LookupEnv("KEEPER_ENABLE_DEBUG")
+	enableDebug, _ := os.LookupEnv("KEEPER_ENABLE_DEBUG")
 	if enableDebug == "true" || enableDebug == "1" {
 		Debug(true)
 	}
+	LogD.Printf("config: %#v", config)
 	return nil
 }
 

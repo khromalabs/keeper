@@ -1,0 +1,156 @@
+.nh
+.TH man 1 "14 Jul 2023" "1.0" "keeper man page"
+.SH NAME
+keeper - Privately store your personal info
+.SH SYNOPSIS
+.PP
+.nf
+keeper <template> [-r|read|-R|--READ|-u|--update|-d|--delete] [filter exp]
+keeper -t|--template
+keeper -t|--template <template>
+.SH DESCRIPTION
+Keeper is a GPLv3 application designed to privately store your personal info using
+custom formats described in YAML templates.
+Currently available frontend is console, and currently available backend is Sqlite.
+Application is designed to be flexible in both ends so more frontends/backends
+could be availabe in the future.
+.SH OPTIONS
+Storage commands always require to specify first a template which will be
+used to create a new storage support, following the same name, if not already
+available.
+.PP
+(Default command without option parameters is to create a new registry).
+.PP
+.RS
+.nf
+-r, --read      Read storage registries
+-R, --READ      Read storage registries alt (skipping text fields)
+-u, --update    Update storage registries
+-d, --delete    Delete storage registries
+.fi
+.RE
+.PP
+For every storage option \fB\fC-r|-R|-u|-d\fR \fB\fC[filter exp]\fR is applied if available.
+.SH FILTER EXP
+.PP
+Filter expresion could contain one or more field descriptions like those:
+
+.PP
+.RS
+
+.nf
+field:"exact match whole field"
+field:%partial_match%
+field:%partial_match_at_end
+
+.fi
+.RE
+
+.PP
+Partial matches percent symbols can appear at the beginning and/or the end of
+the searched expresion, following the SQL "LIKE" standard.
+
+.SH INFO COMMAND OPTIONS
+.PP
+.RS
+
+.nf
+-t|--template               Lists available templates
+-t|--template <template>    List template fields
+
+.fi
+.RE
+
+.PP
+Info command options are used for autocompletion whenever package
+bash-completion is available.
+
+.SH SAMPLE COMMANDS
+.PP
+.RS
+
+.nf
+keeper note                                 Add a new note registry
+keeper task -r id:5                         Read from task storage registry with id 5
+keeper note -u tag:project1,title:%note%    Update all notes with tag "project1" containing
+                                            the word "note" in the field "title"
+keeper url -d id:10                         Delete registry from url storage with id 10
+
+.fi
+.RE
+
+.SH TEMPLATE FORMAT
+.PP
+Format for the YAML storage templates per field is:
+
+.PP
+.RS
+
+.nf
+<field>:
+ *type: <integer|string|text|autodate|tokens>
+  validation:
+    required: <true|FALSE>
+    regex:    <regex expression>
+    tip:      <sample expression to show when regex validation fails>
+
+.fi
+.RE
+
+.PP
+(\fB\fC*\fR means required)
+
+.RS
+.IP \(bu 2
+In CLI text fields will invoke the text editor defined in \fB\fC$EDITOR\fR\&.
+\fB\fCtext\fR multi-line fields can be ignored in readings using the \fB\fC-R\fR option.
+.IP \(bu 2
+\fB\fCtokens\fR fields will create a searchable table of different words associated
+with the registry. One obvious use case is tags.
+
+.RE
+
+.SH ENVIRONMENT DEFAULTS AND CONFIGURATION OPTIONS
+.PP
+\fINote: The application has been designed with Windows compatibility in mind but not
+tested there yet so please by now take the Windows compatibility with a pinch
+of salt.\fP
+
+.PP
+Location for the keeper data directory containing the templates and the database
+is \fB\fC$XDG_DATA_HOME/keeper\fR in Linux or Mac, if \fB\fC$XDG_DATA_HOME\fR is undefined the
+default is \fB\fC~/.local/share/keeper\fR\&.
+For Windows default location is \fB\fC%APPDATA%/keeper\fR\&.
+Location can be overriden with the enviroment option \fB\fCKEEPER_CONFIG_FILE\fR or
+in the configuration file (see below).
+
+.PP
+Templates location can be overriden with the enviroment variable
+\fB\fCKEEPER_TEMPLATES_PATH\fR and database location can be overriden with the variable
+\fB\fCKEEPER_DB_PATH\fR or in the configuration file (see below).
+
+.SH CONFIGURATION FILE
+.PP
+Default location for the optional configuration file \fB\fCkeeper.yaml\fR is
+\fB\fC$XDG_CONFIG_HOME\fR for Linux or Mac, being \fB\fC~/.config\fR if that's not available,
+and \fB\fC%APPDATA%\fR for Windows.
+Location can be overriden with the enviroment option \fB\fCKEEPER_CONFIG_FILE\fR\&.
+
+.PP
+The optional YAML configuration file can contain these parameters:
+
+.PP
+.RS
+
+.nf
+storage:      Selected storage engine. Only available option by now is `sqlite`.
+path:
+  templates:  Location directory for the templates files
+  db:         Database filename (full path)
+editor:       External editor that will be used with the `text` fields.
+              (If not defined it will try to use the enviroment variable `$EDITOR`.)
+pager:        Pager for read operations whenever output is bigger than the
+              CLI rows (default `$PAGER` or `less`)
+
+.fi
+.RE

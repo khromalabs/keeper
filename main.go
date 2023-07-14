@@ -51,9 +51,9 @@ func main() {
 }
 
 func parseArguments() ([]string, error) {
-	appInfoHeader := "Usage:\tkeeper <template> [-r|--read|-R|--READ|-u|--update|-d|--delete] [filter exp]\n\tkeeper -t [template]\n\n"
+	appInfoHeader := "Usage:\tkeeper <template> [-r|--read|-R|--READ|-u|--update|-d|--delete] [filter exp]\n\tkeeper -t [template]\n\tkeeper -h|--help\n"
 	if len(os.Args) < 2 {
-		return nil, fmt.Errorf(appInfo)
+		return nil, fmt.Errorf(appInfoHeader)
 	}
 	if os.Args[1] == "-t" {
 		var arg2 string
@@ -63,6 +63,8 @@ func parseArguments() ([]string, error) {
 			arg2 = ""
 		}
 		return []string{"templates", arg2, ""}, nil
+	} else if os.Args[1] == "-h" || os.Args[1] == "--help" {
+		return nil, fmt.Errorf(appInfo)
 	}
 	var regex = "^[A-z][A-z0-9_-]+$"
 	if match, err := regexp.MatchString(regex, os.Args[1]); err != nil || !match {

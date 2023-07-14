@@ -1,19 +1,42 @@
-# keeper
-Keeper is an application to store your personal data. Formats are described
-in YAML templates. Currently available frontend is console, and currently
-available backend is Sqlite. Application is designed to be flexible in both
-ends so more frontends/backends could be availabe in the future.
+# Keeper
+Keeper is a GPLv3 application designed to privately store your personal info using
+custom formats described in YAML templates.
+Currently available frontend is console, and currently available backend is Sqlite.
+Application is designed to be flexible in both ends so more frontends/backends
+could be availabe in the future.
+
+## USAGE SYNOPSIS
+```
+keeper <template> [-r|read|-R|--READ|-u|--update|-d|--delete] [filter exp]
+keeper -t|--template
+keeper -t|--template <template>
+```
 
 ## STORAGE COMMAND OPTIONS
 
-Default command (no option parameters) is to create a new registry. 
+Storage commands always require to specify first a template which will be
+used to create a new storage support, following the same name, if not already
+available.
+
+(Default command without option parameters is to create a new registry).
 
     -r, --read      Read storage registries
     -R, --READ      Read storage registries alt (skipping text fields)
     -u, --update    Update storage registries
     -d, --delete    Delete storage registries
 
-For every storage option (-r|-R|-u|-d) [filter exp] is applied if available.
+For every storage option `-r|-R|-u|-d` `[filter exp]` is applied if available.
+
+## FILTER EXP
+
+Filter expresion could contain one or more field descriptions like those:
+
+    field:"exact match whole field"
+    field:%partial_match%
+    field:%partial_match_at_end
+
+Partial matches percent symbols can appear at the beginning and/or the end of
+the searched expresion, following the SQL "LIKE" standard. 
 
 ## INFO COMMAND OPTIONS
 
@@ -23,65 +46,68 @@ For every storage option (-r|-R|-u|-d) [filter exp] is applied if available.
 Info command options are used for autocompletion whenever package
 bash-completion is available.
 
-## FILTER EXP
+## SAMPLE COMMANDS
 
-Filter expresion could contain one or more field descriptions like those:
-
-    field1:searched_word \
-    field2:"quoted words to search in exact order" \
-    field3:%%partial_match%%
-
-Partial matches percent symbols can appear at the beginning and/or the end of
-the searched expresion, following the SQL "LIKE" standard. 
-
-Sample commands:
-
+```
 keeper note                                 Add a new note registry
-keeper task -r id:5                         Read from task storage
-                                            registry with id 5
-keeper note -u tag:project1,title:%%note%%    Update all notes with tag "project1"
-                                            containing "note" in the title
-keeper url -d id:10                         Delete registry from url storage
-                                            with id 10
-## TEMPLATES
+keeper task -r id:5                         Read from task storage registry with id 5
+keeper note -u tag:project1,title:%note%    Update all notes with tag "project1" containing
+                                            the word "note" in the field "title"
+keeper url -d id:10                         Delete registry from url storage with id 10
+```
 
-Format for the YAML storage templates is (* means required):
+## TEMPLATE FORMAT
 
+Format for the YAML storage templates per field is:
+
+```
 <field>:
-\*type:integer/string/text/autodate/tokens
- validation:
-   required:true/false (default: false)
-   regex: <regex expression>
-   tip: <sample expression to show when regex validation fails>
+ *type: <integer|string|text|autodate|tokens>
+  validation:
+    required: <true|FALSE>
+    regex:    <regex expression>
+    tip:      <sample expression to show when regex validation fails>
+```
+(`*` means required)
 
-- In CLI text fields will invoke the text editor defined in $EDITOR.
-  "text" fields can be leaved out of registries readings using the -R option.
-- Tokens fields will create a searchable table of different words associated 
+- In CLI text fields will invoke the text editor defined in `$EDITOR`.
+  `text` multi-line fields can be ignored in readings using the `-R` option.
+- `tokens` fields will create a searchable table of different words associated 
   with the registry. One obvious use case is tags.
 
 ## ENVIRONMENT DEFAULTS AND CONFIGURATION OPTIONS
 
-Default location for the optional configuration file "keeper.yaml" is
-$XDG_CONFIG_HOME for Linux or Mac, being ~/.config if that's not availabe,
-and %APPDATA% for Windows. 
-Location can be overriden with the enviroment option KEEPER_CONFIG_FILE.
+*Note: The application has been designed with Windows compatibility in mind but not
+tested there yet so please by now take the Windows compatibility with a pinch
+of salt.*
 
-Defalt location for the keeper data directory containing the templates and the database
-is $XDG_DATA_HOME/keeper in Linux or Mac, being ~/.local/share/keeper
-if that's not available. For Windows default location is %APPDATA%/keeper.
+Location for the keeper data directory containing the templates and the database
+is `$XDG_DATA_HOME/keeper` in Linux or Mac, if `$XDG_DATA_HOME` is undefined the
+default is `~/.local/share/keeper`.
+For Windows default location is `%APPDATA%/keeper`.
+Location can be overriden with the enviroment option `KEEPER_CONFIG_FILE` or 
+in the configuration file (see below).
+
 Templates location can be overriden with the enviroment variable
-KEEPER_TEMPLATES_PATH and database location can be overriden with the variable
-KEEPER_DB_PATH.
+`KEEPER_TEMPLATES_PATH` and database location can be overriden with the variable
+`KEEPER_DB_PATH` or in the configuration file (see below).
 
-## KEEPER CONFIGURATION FILE
+## CONFIGURATION FILE
 
-The optional YAML configuration file can contain this parameters:
+Default location for the optional configuration file `keeper.yaml` is
+`$XDG_CONFIG_HOME` for Linux or Mac, being `~/.config` if that's not available,
+and `%APPDATA%` for Windows. 
+Location can be overriden with the enviroment option `KEEPER_CONFIG_FILE`.
 
-storage:      Selected storage engine. Only available option by now is Sqlite.
+The optional YAML configuration file can contain these parameters:
+
+```
+storage:      Selected storage engine. Only available option by now is `sqlite`.
 path:
   templates:  Location directory for the templates files
   db:         Database filename (full path)
-editor:       External editor that will be used with the "text" fields.
-              (If not defined it will try to use the enviroment variable $EDITOR.)
+editor:       External editor that will be used with the `text` fields.
+              (If not defined it will try to use the enviroment variable `$EDITOR`.)
 pager:        Pager for read operations whenever output is bigger than the
-              CLI rows
+              CLI rows (default `$PAGER` or `less`)
+```
