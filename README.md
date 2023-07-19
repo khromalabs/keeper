@@ -111,3 +111,8 @@ editor:       External editor that will be used with the `text` fields.
 pager:        Pager for read operations whenever output is bigger than the
               CLI rows (default `$PAGER` or `less`)
 ```
+
+## ROADMAP
+
+- Add configurable actions to templates. The idea is to allow automatic processing
+  of some fields eg hook some content to an AI to allow automatic tags generation
