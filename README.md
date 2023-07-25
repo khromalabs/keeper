@@ -7,7 +7,7 @@ could be availabe in the future.
 
 ## USAGE SYNOPSIS
 ```
-keeper <template> [-r|read|-R|--READ|-u|--update|-d|--delete] [filter exp]
+keeper <template> [-r|--read|-R|--READ|-u|--update|-d|--delete] [filter exp]
 keeper -t|--template
 keeper -t|--template <template>
 ```
