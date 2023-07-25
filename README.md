@@ -114,8 +114,12 @@ pager:        Pager for read operations whenever output is bigger than the
 
 ## TODO
 
+The application is already working ok for my own personal needs but I have
+this ideas in mind:
+
 - Add scriptable actions to templates. The idea is to allow automatic processing
   of some fields eg hook some content to an AI to allow automatic tags generation.
 - Add support to template modifications once there's already an storage created.
   Right now any change in a template format, once the storage already exists would mean 
   that the program refuses to perform any further operation. 
+- More field types (booleans over all)
