@@ -1,6 +1,6 @@
 # Keeper
-Keeper is a GPLv3 application designed to privately store your personal info using
-custom formats described in YAML templates.
+GPLv3 application designed to privately store your personal info using
+custom formats described in simple YAML templates via CRUD commands.
 Currently available frontend is console, and currently available backend is Sqlite.
 Application is designed to be flexible in both ends so more frontends/backends
 could be availabe in the future.
@@ -117,6 +117,4 @@ pager:        Pager for read operations whenever output is bigger than the
 - Add scriptable actions to templates. The idea is to allow automatic processing
   of some fields eg hook some content to an AI to allow automatic tags generation.
 - Right now any change in a template format, once the storage already exists would mean 
-  that the program refuses to perform any operation. Right now only valid option
-  would be to rename the template and use a new storage or perform manually the changes
-  in the storage. Adding some support to allow template modifications would be nice.
+  that the program refuses to perform any further operation. 
