@@ -116,5 +116,6 @@ pager:        Pager for read operations whenever output is bigger than the
 
 - Add scriptable actions to templates. The idea is to allow automatic processing
   of some fields eg hook some content to an AI to allow automatic tags generation.
-- Right now any change in a template format, once the storage already exists would mean 
+- Add support to template modifications once there's already an storage created.
+  Right now any change in a template format, once the storage already exists would mean 
   that the program refuses to perform any further operation. 
