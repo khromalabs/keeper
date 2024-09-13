@@ -26,8 +26,11 @@ var appInfo string
 
 var conf *config.Config
 
+var version string
+
 func main() {
 	arg, err := parseArguments()
+	fmt.Printf("Keeper version %s\n", version)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
