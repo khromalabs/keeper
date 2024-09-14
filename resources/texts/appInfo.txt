@@ -1,6 +1,7 @@
 Usage:  keeper <template> [-r|read|-R|--READ|-u|--update|-d|--delete] [filter exp]
-        keeper -t|--template
-        keeper -t|--template <template>
+        keeper -t|--template [template]
+        keeper -h|--help
+        keeper -v|--version
 
 STORAGE COMMAND OPTIONS
 
@@ -17,6 +18,8 @@ INFO COMMAND OPTIONS
 
     -t|--template               Lists available templates
     -t|--template <template>    List template fields
+    -h|--help                   Show this help
+    -v|--version                Show Keeper version
 
 Info command options are used for autocompletion whenever package
 bash-completion is available.

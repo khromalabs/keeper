@@ -6,8 +6,9 @@ keeper - Privately store your personal info
 .PP
 .nf
 keeper <template> [-r|read|-R|--READ|-u|--update|-d|--delete] [filter exp]
-keeper -t|--template
-keeper -t|--template <template>
+keeper -t|--template [template]
+keeper -h|--help
+keeper -v|--version
 .SH DESCRIPTION
 Keeper is a GPLv3 application designed to privately store your personal info using
 custom formats described in YAML templates.
@@ -57,6 +58,7 @@ the searched expresion, following the SQL "LIKE" standard.
 .nf
 -t|--template               Lists available templates
 -t|--template <template>    List template fields
+-v|--version                Show keeper version
 
 .fi
 .RE

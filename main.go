@@ -30,7 +30,6 @@ var version string
 
 func main() {
 	arg, err := parseArguments()
-	fmt.Printf("Keeper version %s\n", version)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
@@ -54,7 +53,7 @@ func main() {
 }
 
 func parseArguments() ([]string, error) {
-	appInfoHeader := "Usage:\tkeeper <template> [-r|--read|-R|--READ|-u|--update|-d|--delete] [filter exp]\n\tkeeper -t [template]\n\tkeeper -h|--help\n"
+	appInfoHeader := "Usage:\tkeeper <template> [-r|--read|-R|--READ|-u|--update|-d|--delete] [filter exp]\n\tkeeper -t [template]\n\tkeeper -h|--help\n\tkeeper -v|--version"
 	if len(os.Args) < 2 {
 		return nil, fmt.Errorf(appInfoHeader)
 	}
@@ -68,6 +67,8 @@ func parseArguments() ([]string, error) {
 		return []string{"templates", arg2, ""}, nil
 	} else if os.Args[1] == "-h" || os.Args[1] == "--help" {
 		return nil, fmt.Errorf(appInfo)
+	} else if os.Args[1] == "-v" || os.Args[1] == "--version" {
+		return nil, fmt.Errorf("Keeper version %s\n", version)
 	}
 	var regex = "^[A-z][A-z0-9_-]+$"
 	if match, err := regexp.MatchString(regex, os.Args[1]); err != nil || !match {
