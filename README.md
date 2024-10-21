@@ -1,5 +1,5 @@
 # Keeper
-GPLv3 application designed to privately store your personal info using
+GPLv3 simple CLI application designed to privately store your personal info using
 custom formats described in simple YAML templates via CRUD commands.
 Currently available frontend is console, and currently available backend is Sqlite.
 Application is designed to be flexible in both ends so more frontends/backends
