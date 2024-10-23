@@ -1,10 +1,8 @@
 # Keeper
-Simple command-line interface (CLI) application, licensed under GPLv3, 
-designed to privately store personal information using custom formats described 
-in YAML templates. The application supports basic CRUD (Create, Read, Update, Delete)
-commands. Currently, the only available backend is SQLite, but the application is
-designed to be flexible, allowing for the addition of more frontends and backends
-in the future.
+Lightweight CLI application, licensed under GPLv3, for storing personal data
+in custom formats defined by YAML templates. Supports basic CRUD operations
+and features a modular design, with SQLite as the initial backend.
+Built to be extensible, with easy addition of new frontends and backends.
 
 ## USAGE SYNOPSIS
 ```
